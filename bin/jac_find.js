@@ -6,10 +6,11 @@ var request = require('request')
 var cheerio = require('cheerio')
 var shelljs = require('shelljs')
 
-var starting_id = 52087
-var ending_id  = starting_id + 1
+var starting_id = argv.from
+var ending_id  = argv.to
 
-console.log(`args are ${argv}`)
+console.log(`from ${argv.from}`)
+console.log(`to ${argv.to}`)
 
 var base_url = "http://tracker.johnnyairplus.com/client/tracking/"
 
