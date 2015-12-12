@@ -7,11 +7,12 @@ Install
 Usage
 ----
 
-    $> jac_find --from 50060 --to 51060`
+    $> jac_find --from 50060 --to 51060 --text`
 
     Options :
       from - starting from this jac package id
       to   - search until this packageid
+      text - (OPTIONAL) only print out tracking ids that whose recipients contain the text
 
       * package id is the number at the end of the jac url
         ex : http://tracker.johnnyairplus.com/client/tracking/190703

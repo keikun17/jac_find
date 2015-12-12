@@ -30,7 +30,16 @@ for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
         recipient_name = recipient_name.trim()
         if(recipient_name.length > 0){
           var tracking_id = response.request.uri.pathname.split('/')[3]
-          console.log(`${tracking_id} : found ${recipient_name}`)
+
+          if(argv.text) {
+            if(recipient_name.indexOf(argv.text) !== -1) {
+            console.log(`${tracking_id} : found ${recipient_name}`)
+            }
+          } else {
+            console.log(`${tracking_id} : found ${recipient_name}`)
+          }
+
+
         }
       }
 
