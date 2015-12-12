@@ -32,7 +32,7 @@ do {
 
     if(error){
       console.log(`error processing ${url} :`)
-      consooe.log(error)
+      console.log(error)
     }
 
   })
