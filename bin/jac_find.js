@@ -41,8 +41,6 @@ var runner = setInterval(function() {
           } else {
             console.log(`${tracking_id} : found ${recipient_name}`)
           }
-
-
         }
       }
 
@@ -50,8 +48,8 @@ var runner = setInterval(function() {
     }
 
     if(error) {
-      // console.log(`${pointer} : error`)
+      console.log(`${tracking_id} : error`)
     }
 
   })
-}, 1000)
+}, 3000)
