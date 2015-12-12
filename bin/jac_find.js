@@ -9,9 +9,6 @@ var shelljs = require('shelljs')
 var starting_id = argv.from
 var ending_id  = argv.to
 
-console.log(`from ${argv.from}`)
-console.log(`to ${argv.to}`)
-
 var base_url = "http://tracker.johnnyairplus.com/client/tracking/"
 
 var pointer = starting_id
@@ -19,24 +16,30 @@ var recipients = []
 
 
 console.log(`Checking ${starting_id} until ${ending_id}`)
-do {
+console.log('--------')
+
+for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
     if(!error) {
       var $ = cheerio.load(html)
-      var recipient = $('p.text:contains("Recipient:")')
-      if(recipient.length > 0){
-        console.log(`${pointer} : found ${recipient.text()}`)
+
+      var recipient_container = $('p.text:contains("Recipient:")')
+      if(recipient_container.length > 0){
+        var recipient_name = recipient_container.text().replace("Recipient:   ", "")
+        recipient_name = recipient_name.trim()
+        if(recipient_name.length > 0){
+          var tracking_id = response.request.uri.pathname.split('/')[3]
+          console.log(`${tracking_id} : found ${recipient_name}`)
+        }
       }
+
     }
 
-    if(error){
-      console.log(`error processing ${url} :`)
-      console.log(error)
+    if(error) {
+      // console.log(`${pointer} : error`)
     }
 
   })
-
-  pointer = pointer + 1
-} while (pointer <= ending_id)
+}
 
