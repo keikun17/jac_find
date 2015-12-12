@@ -18,7 +18,10 @@ var recipients = []
 console.log(`Checking ${starting_id} until ${ending_id}`)
 console.log('--------')
 
-for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
+var pointer = starting_id
+var runner = setInterval(function() {
+  if(pointer > ending_id) { clearInterval(runner) }
+
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
     if(!error) {
@@ -33,7 +36,7 @@ for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
 
           if(argv.text) {
             if(recipient_name.indexOf(argv.text) !== -1) {
-            console.log(`${tracking_id} : found ${recipient_name}`)
+              console.log(`${tracking_id} : found ${recipient_name}`)
             }
           } else {
             console.log(`${tracking_id} : found ${recipient_name}`)
@@ -43,6 +46,7 @@ for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
         }
       }
 
+      pointer++
     }
 
     if(error) {
@@ -50,5 +54,4 @@ for(var pointer = starting_id; pointer < ending_id ; pointer++ ) {
     }
 
   })
-}
-
+}, 1000)
