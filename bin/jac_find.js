@@ -20,13 +20,21 @@ console.log(`Checking ${starting_id} until ${ending_id}`)
 console.log('--------')
 
 var pointer = starting_id
-var bar = new ProgressBar("processing [:bar] :percent :etas", {width: 50, total: (ending_id - starting_id)})
+
+var bar = new ProgressBar("processing [:bar] [:current of :total (:trackingid)] | :percent | eta: :etas", {width: 50, total: (ending_id - starting_id)})
+
 var runner = setInterval(function() {
   if(pointer > ending_id) { clearInterval(runner) }
 
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
-    bar.tick()
+
+    var tracking_id = response.request.uri.pathname.split('/')[3]
+
+    bar.tick({
+      trackingid: tracking_id
+    })
+
     if(!error) {
       var $ = cheerio.load(html)
 
@@ -35,12 +43,11 @@ var runner = setInterval(function() {
         var recipient_name = recipient_container.text().replace("Recipient:   ", "")
         recipient_name = recipient_name.trim()
         if(recipient_name.length > 0){
-          var tracking_id = response.request.uri.pathname.split('/')[3]
 
           if(argv.text) {
             if(recipient_name.indexOf(argv.text) !== -1) {
               console.log(`\n ${tracking_id} : found ${recipient_name}`)
-            }
+           }
           } else {
             console.log(`\n ${tracking_id} : found ${recipient_name}`)
           }
