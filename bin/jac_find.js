@@ -5,6 +5,7 @@ var argv = require('yargs').argv
 var request = require('request')
 var cheerio = require('cheerio')
 var shelljs = require('shelljs')
+var ProgressBar = require('progress')
 
 var starting_id = argv.from
 var ending_id  = argv.to
@@ -19,11 +20,13 @@ console.log(`Checking ${starting_id} until ${ending_id}`)
 console.log('--------')
 
 var pointer = starting_id
+var bar = new ProgressBar("processing [:bar] :percent :etas", {width: 50, total: (ending_id - starting_id)})
 var runner = setInterval(function() {
   if(pointer > ending_id) { clearInterval(runner) }
 
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
+    bar.tick()
     if(!error) {
       var $ = cheerio.load(html)
 
@@ -36,10 +39,10 @@ var runner = setInterval(function() {
 
           if(argv.text) {
             if(recipient_name.indexOf(argv.text) !== -1) {
-              console.log(`${tracking_id} : found ${recipient_name}`)
+              console.log(`\n ${tracking_id} : found ${recipient_name}`)
             }
           } else {
-            console.log(`${tracking_id} : found ${recipient_name}`)
+            console.log(`\n ${tracking_id} : found ${recipient_name}`)
           }
         }
       }
@@ -52,4 +55,4 @@ var runner = setInterval(function() {
     }
 
   })
-}, 3000)
+}, 1000)
