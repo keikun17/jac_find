@@ -7,21 +7,20 @@ var cheerio = require('cheerio')
 var shelljs = require('shelljs')
 var ProgressBar = require('progress')
 
+var base_url = "http://tracker.johnnyairplus.com/client/tracking/"
 var starting_id = argv.from
 var ending_id  = argv.to
-
-var base_url = "http://tracker.johnnyairplus.com/client/tracking/"
-
 var pointer = starting_id
-var recipients = []
 
+var recipients = []
 
 console.log(`Checking ${starting_id} until ${ending_id}`)
 console.log('--------')
 
-var pointer = starting_id
-
-var bar = new ProgressBar("processing [:bar] [:current of :total (:trackingid)] | :percent | eta: :etas", {width: 50, total: (ending_id - starting_id)})
+var bar = new ProgressBar(
+  "processing [:bar] [:current of :total (:trackingid)] | :percent | eta: :etas",
+  {width: 50, total: (ending_id - starting_id)}
+)
 
 var runner = setInterval(function() {
   if(pointer > ending_id) { clearInterval(runner) }
@@ -29,13 +28,16 @@ var runner = setInterval(function() {
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
 
-    var tracking_id = response.request.uri.pathname.split('/')[3]
+    var tracking_id = ""
 
     bar.tick({
       trackingid: tracking_id
     })
 
     if(!error) {
+
+      tracking_id = response.request.uri.pathname.split('/')[3]
+
       var $ = cheerio.load(html)
 
       var recipient_container = $('p.text:contains("Recipient:")')

@@ -7,7 +7,7 @@ Install
 Usage
 ----
 
-    $> jac_find --from 50060 --to 51060 --text`
+    $> jac_find --from 50060 --to 51060 --text MYNAME`
 
     Options :
       from - starting from this jac package id
