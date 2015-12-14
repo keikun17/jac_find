@@ -12,10 +12,8 @@ var starting_id = argv.from
 var ending_id  = argv.to
 var pointer = starting_id
 
-var recipients = []
-
-console.log(`Checking ${starting_id} until ${ending_id}`)
-console.log('--------')
+shelljs.echo(`Checking ${starting_id} until ${ending_id}`)
+shelljs.echo('--------')
 
 var bar = new ProgressBar(
   "processing [:bar] [:current of :total (:trackingid)] | :percent | eta: :etas",
@@ -28,7 +26,7 @@ var runner = setInterval(function() {
   var url = base_url + pointer
   var html = request(url, function(error, response, html){
 
-    var tracking_id = ""
+    var tracking_id = response.request.uri.pathname.split('/')[3]
 
     bar.tick({
       trackingid: tracking_id
@@ -36,31 +34,30 @@ var runner = setInterval(function() {
 
     if(!error) {
 
-      tracking_id = response.request.uri.pathname.split('/')[3]
 
       var $ = cheerio.load(html)
 
       var recipient_container = $('p.text:contains("Recipient:")')
-      if(recipient_container.length > 0){
-        var recipient_name = recipient_container.text().replace("Recipient:   ", "")
-        recipient_name = recipient_name.trim()
-        if(recipient_name.length > 0){
+      var recipient_name = recipient_container.text().replace("Recipient:   ", "")
 
-          if(argv.text) {
-            if(recipient_name.indexOf(argv.text) !== -1) {
-              console.log(`\n ${tracking_id} : found ${recipient_name}`)
-           }
-          } else {
-            console.log(`\n ${tracking_id} : found ${recipient_name}`)
-          }
+      if (recipient_name){
+        var recipient_line = ""
+
+        if (argv.text) {
+          if (recipient_name.indexOf(argv.text) !== -1)  recipient_line = `\n ${tracking_id} : found ${recipient_name}`
+
+        } else {
+          recipient_line = `\n ${tracking_id} : found ${recipient_name}`
         }
+
+        if (recipient_line) shelljs.echo(recipient_line)
       }
 
       pointer++
     }
 
     if(error) {
-      console.log(`${tracking_id} : error`)
+      shelljs.echo(`${tracking_id} : error`)
     }
 
   })
