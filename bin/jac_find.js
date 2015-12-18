@@ -11,9 +11,7 @@ var base_url = "http://tracker.johnnyairplus.com/client/tracking/"
 var starting_id = argv.from
 var ending_id  = argv.to
 var pointer = starting_id
-
-shelljs.echo(`Checking ${starting_id} until ${ending_id}`)
-shelljs.echo('--------')
+var JacFinder = require('../lib/jac_finder.js')
 
 var bar = new ProgressBar(
   "processing [:bar] [:current of :total (:trackingid)] | :percent | eta: :etas",
