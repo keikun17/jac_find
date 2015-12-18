@@ -2,7 +2,14 @@ Used to crawl a specific site to check if my package has an AWB already
 
 Install
 ----
-`npm install jac_find`
+    `npm install jac_find`
+
+Development
+----
+
+Make changes to `bin` and `src`. `src` compiles to `lib`
+
+    babel -d src lib
 
 Usage
 ----
